@@ -9,9 +9,23 @@ jobs:
   performance:
     runs-on: ubuntu-latest
 
+    services:
+      influxdb:
+        image: influxdb:latest
+        ports:
+          - "8086:8086"
+        options: --health-cmd="influxd version" --health-interval=10s --health-timeout=5s --health-retries=3
+
+      jmeter-slave:
+        image: justb4/jmeter:latest
+        command: -Jserver.rmi.ssl.disable=true -s -Jserver.rmi.localport=4000
+        options: --health-cmd="jmeter -v" --health-interval=10s --health-timeout=5s --health-retries=3
+        ports:
+          - "4000:4000"
+
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v2
 
     - name: Run Taurus Performance Test
-      run: docker run -v $PWD:/bzt-configs ghcr.io/blazemeter/taurus -o /bzt-configs/bzt-config.yml
+      run: docker-compose -f docker-compose.yml -f docker-compose-slaves.yml up
