@@ -1,0 +1,17 @@
+name: Performance Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  performance:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Run Taurus Performance Test
+      run: docker run -v $PWD:/bzt-configs ghcr.io/blazemeter/taurus -o /bzt-configs/bzt-config.yml
