@@ -1,5 +1,19 @@
 version: '3'
 services:
+  jmeter-master:
+    image: justb4/jmeter:latest
+    volumes:
+      - ./your-test-plan.jmx:/mnt/your-test-plan.jmx
+    command: -Jserver.rmi.ssl.disable=true -n -t /mnt/your-test-plan.jmx -l /mnt/results.jtl
+
+  jmeter-slave:
+    image: justb4/jmeter:latest
+    volumes:
+      - ./your-test-plan.jmx:/mnt/your-test-plan.jmx
+    command: -Jserver.rmi.ssl.disable=true -s -Jserver.rmi.localport=4000
+    depends_on:
+      - influxdb
+
   influxdb:
     image: influxdb:latest
     ports:
