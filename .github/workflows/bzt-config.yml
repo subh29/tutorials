@@ -1,6 +1,6 @@
 execution:
 - scenario:
-    script: PinpointLogin.jmx
+    script: jmeter-example.jmx
     properties:
       - __Pthreads=5  # Number of threads per JMeter instance
     iterations: 1
